@@ -1,7 +1,7 @@
 ---
 title: "HackTheBox - Snoopy"
 layout: "post"
-categories: "Windows"
+categories: "Linux"
 tags: ["HackTheBox", "Writeup", "Web", "Path Traversal", "DNS", "MiTM", "ClamAV"]
 ---
 
@@ -35,7 +35,7 @@ The remote server host 3 services:
 - DNS server (Bind9)
 - HTTP server (nginx 1.18
 
-## DNS Enumeration
+## DNS zone transfer
 
 We can perform DNS zone transfer to get multiple subdomains:
 
@@ -61,6 +61,8 @@ snoopy.htb.        86400    IN    SOA    ns1.snoopy.htb. ns2.snoopy.htb. 2022032
 ;; WHEN: Tue Sep 12 16:49:22 CEST 2023
 ;; XFR size: 11 records (messages 1, bytes 325)
 ```
+
+DNS zone transfer is the principle of send AXFR request at the DNS server, it's no need authentication to get DNS records.
 
 ## Web Enumeration
 
@@ -119,6 +121,9 @@ Archive:  output
 ```
 
 The website compress the asked file in ZIP file and send it into the client.
+
+### Path Traversal & Bypass filter
+
 After multiple tests, we can discover a path traversal:
 
 ![](/assets/posts/2023-09-19-htb-snoopy/burp_screen_path_traversal.png)
@@ -172,6 +177,8 @@ key "rndc-key" {
 };
 ```
 
+## Mattermost's account takerover
+
 Let's try to reset password in Mattermost of this users:
 
 ```bash
@@ -185,7 +192,7 @@ cschultz:x:1004:1005:Charles Schultz:/home/cschultz:/bin/bash
 vgray:x:1005:1006:Violet Gray:/home/vgray:/bin/bash
 ```
 
-## Poison the DNS
+### Poison the DNS
 
 After getting the RNDC key of the Bind9 DNS server with can create A record and listen the trafic
 
@@ -255,6 +262,8 @@ After have delete bad URL encode and smtpd.py format, we get a reset password li
 
 Now we can connect into Mattermost with sbrown user account.
 
+## SSH MiTM
+
 There is a custom command in the tchat:
 
 ![](/assets/posts/2023-09-19-htb-snoopy/server_provision_message.png)
@@ -323,6 +332,8 @@ We can connect via SSH protocol with this credentials `cbrown:sn00pedcr3dential!
 ❯ sshpass -p 'sn00pedcr3dential!!!' ssh cbrown@snoopy.htb
 ```
 
+## Horizontal privilege escalation: Git sudo missconfiguration/CVE-2023-23946
+
 Sudo permissions allow cbrown to execute `git apply -v` as sbrown with parameters which matches strings containing only upper and lower case letters, digits and dots at the end of the string:
 
 ```bash
@@ -375,6 +386,8 @@ Basically we can connect via SSH protocol with our SSH key:
 ```bash
 ❯ ssh -i .ssh/id_rsa sbrown@snoopy.htb
 ```
+
+## Lateral privilege escalation: Clamscan sudo missconfiguration/CVE-2023-20052
 
 Sudo permissions allow sbrown to execute clamscan as root with the argument `--debug` that take in parameter a file stocked in the `/home/sbrown/scanfiles/*` folder:
 
