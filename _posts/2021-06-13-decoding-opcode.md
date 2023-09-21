@@ -1,5 +1,5 @@
 ---
-title: "Comment décoder des opcodes ?"
+title: "Intro to Opcode Decoding"
 layout: "post"
 categories: "Linux"
 tags: ["Reverse Engineering"]
@@ -34,7 +34,7 @@ Premièrement les instructions sont composées de :
 
 Voici un schéma qui résume le format des instructions en architecture Intel® 64 et IA-32 :
 
-![](https://i.imgur.com/pJfQoOO.png)
+![image1](https://i.imgur.com/pJfQoOO.png)
 
 ## Qu'est ce qu'un déplacement ?
 
@@ -81,14 +81,14 @@ c3
 
 Le premier opcode est 0x55, c'est un **opcode primaire** alors nous avons simplement à regarder l'instruction correspondante dans [l'opcode table](http://sparksandflames.com/files/x86InstructionChart.html) :
 
-![](https://i.imgur.com/ehrSeWo.png)
+![image2](https://i.imgur.com/ehrSeWo.png)
 
 La première instruction est alors `PUSH EBP`, c'est une instruction qui fait 1 byte, et qui n'a pas le Mod R/M.
 
 Ensuite, les 2 opcodes suivants sont 0x89 0xe5.
 Commencons par le premier opcode en regardant dans la table :
 
-![](https://i.imgur.com/oo62lmP.png)
+![image3](https://i.imgur.com/oo62lmP.png)
 
 Cependant cette instruction a le Mod R/M activé.
 
@@ -98,11 +98,11 @@ L'octet Mod R/M spécifie les opérandes de l'instruction et leur mode d'adressa
 
 Voici un schéma simple pour comprendre la composition du byte Mod R/M :
 
-![](https://i.imgur.com/XzHMDtT.png)
+![image4](https://i.imgur.com/XzHMDtT.png)
 
 Le **champ MOD** peut prendre plusieurs valeurs ainsi ce dernier va définir le mode d'adressage :
 
-![](https://i.imgur.com/PeZmzAN.png)
+![image5](https://i.imgur.com/PeZmzAN.png)
 
 En résumé :
 
@@ -118,7 +118,7 @@ Afin de déterminer quel opérande est la source et lequel est la destination, n
 
 Pour finir le **champ REG** détermine le registre source ou destination :
 
-![](https://i.imgur.com/CY5GBxK.png)
+![image6](https://i.imgur.com/CY5GBxK.png)
 
 Revenons à nos 2 opcodes, nous savons déjà que l'instruction `MOV` est présente avec le Mod R/M.
 Nous allons donc prendre l'opcode suivant : 0xe5 et le décomposer en bits pour récupérer le d bit et nos champs vus précédemment :
@@ -132,8 +132,10 @@ Le d bit est égal à 0 donc REG est la source et son registre est `ESP`. Deplus
 
 Il nous reste plus qu'a regarder dans la table d'adressage de la [documentation Intel](https://www.intel.com/content/dam/www/public/us/en/documents/manuals/64-ia-32-architectures-software-developer-instruction-set-reference-manual-325383.pdf) le registre destination :
 
-![](https://i.imgur.com/QJuJFbM.png)
+![image7](https://i.imgur.com/QJuJFbM.png)
 
 Maintenant nous savons que l'instruction `MOV` met la valeur pointée dans `ESP` (source) dans le registre `EBP`. (destination)
 
 Nous retrouvons parfaitement l'épilogue de notre fonction.
+
+Cet article peut etre être une base de connaissances pour l'écriture d'un désassembleur, cependant la méthode présentée ne permet de décoder tous les opcodes existants. Il s'agit simplement d'un introduction au decoding d'opcode. 😄

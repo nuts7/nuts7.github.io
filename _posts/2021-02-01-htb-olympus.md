@@ -7,9 +7,7 @@ tags: ["HackTheBox", "Writeup", "Network", "Docker"]
 
 Bonjour à tous, je vous présente mon **write-up** qui porte sur la machine **Olympus** de **HackTheBox** qui était assez cool et qui m'a apprit des choses que je n'avais jamais vu auparavant surtout dans un CTF. Elle n'est pas difficile mais très intéréssante et amusante à root... 😀
 
-# Recon
-
-## Nmap
+## Port Scanning
 
 ```bash
 # Nmap 7.91 scan initiated Fri Jan 29 17:30:12 2021 as: nmap -sC -sV -oA nmap -Pn olympus.htb
@@ -55,21 +53,13 @@ Nous pouvons voir que le serveur contient 3 ports ouverts:
 2. Port 80 (Serveur Web Apache)
 3. Port 2222 (Serveur SSH)
 
-### Enumération Serveur DNS
+## DNS enumeration
 
 Commencons par intérroger le serveur DNS afin d'afficher l'opcode mnémotechnique **AXFR** avec **dig**. La requete AXFR ne renvoie rien d'intéréssant, cependant un autre nom de domaine peut etre important...
 
 ![dig](https://i.imgur.com/IvHQg4g.png)
 
-### Enumération Serveur Web
-
-###### Web Dir
-
-![webdir](https://i.imgur.com/njBhSKT.png)
-
-Rien n'a été trouvé.
-
-###### HTTP Headers
+## Xdebug Exploitation
 
 En regardant les headers des requetes et réponses HTTP on sait maintenant que **Xdebug 2.5.5** est en marche sur la machine, ce qui peut permettre aux développeurs de déboguer à distance.
 
@@ -77,9 +67,7 @@ En regardant les headers des requetes et réponses HTTP on sait maintenant que *
 
 Après quelques recherches, on s'apercoit que cette librairie est touché par une [RCE](https://paper.seebug.org/397/), ce qui va nous permettre d'avoir un premier foothold sur la machine. 😇
 
-# Exploitation
-
-Nous allons utiliser un [script python](https://github.com/vulhub/vulhub/blob/master/php/xdebug-rce/exp.py) déjà présent sur GitHub pour plus de rapidité et facilité.
+Nous allons utiliser un [PoC développé en python](https://github.com/vulhub/vulhub/blob/master/php/xdebug-rce/exp.py) déjà présent sur GitHub pour plus de rapidité et facilité.
 
 ![rce_script](https://i.imgur.com/qTLDi5R.png)
 
@@ -89,7 +77,7 @@ Nous pouvons maintenant executer des commandes en www-data sur la cible, il ne r
 
 Enfin, nous avons un shell sur la machine cible !
 
-# Pivot to Olympia container
+## Pivot to Olympia container
 
 La présence d'un .dockerenv certifie bien le fait que nous sommes dans un container Docker.
 
@@ -99,7 +87,7 @@ Avec une énumération un peu plus appronfondie, nous avons un fichier .cap de c
 
 ![presence&transfert_cap](https://i.imgur.com/XLbOkkM.png)
 
-###### Analyse .cap
+### Analyse .cap
 
 Plusieurs solutions sont possibles:
 
@@ -108,7 +96,7 @@ Plusieurs solutions sont possibles:
 
 ![analyse_cap](https://i.imgur.com/CDPomUA.png)
 
-###### Cracking WPA key
+### Cracking WPA key
 
 À partir d'un SSID nous pouvons tenter de casser la clé **WPA** de ce AP sans fil avec **aircrack-ng**
 
@@ -122,7 +110,7 @@ J'ai eu des difficultés pour comprendre que après cette étape, nous devons de
 
 On se retrouve une nouvelle fois à l'intérieur d'un container Docker.
 
-# Pivot to Hades / Olympus
+## Pivot to Hades / Olympus
 
 Un document .txt dans le répertoire courant révèle un nouveau nom de domaine pour la machine.
 
@@ -140,7 +128,7 @@ Lors de la phase initiale d'énumération, j'avais essayé de faire un transfert
 
 Nous avons des informations en or dans les **records TXT**.
 
-###### Port Knocking
+### Port Knocking
 
 Durant notre scan nmap, nous avons vu que le port 22 était filtré.
 On obtient maintenant les credentials d'un utilisateur nommé prometheus, ainsi que des numéros pour aller au portail d'Hadès qui sont concrètement les numéros de port sur lesquels nous devons nous connecter pour réaliser un **Port Knocking** afin de se connecter à l'utilisateur prometheus.
@@ -155,7 +143,7 @@ Ensuite nous pouvons nous connecter avec le mot de passe obtenu auparavant. 🤠
 
 ![port_knocking](https://i.imgur.com/tJ5fJMj.png)
 
-# Privilege Escalation
+## Local Privilege Escalation (LPE)
 
 Pour conclure cette machine plaisante, l'éscalation de privilèges est très simple.
 Prometheus est dans le **groupe "docker"**. De plus, le client Docker exige des droits root donc je vais exécuter un shell à partir d'une image du Docker Hub:
@@ -169,10 +157,7 @@ root@f388364ddf48:/#
 
 ```bash
 prometheus@olympus:~$ docker run -v /:/mnt --rm -it olympia chroot /mnt bash
-root@421e0ac051c7:/# cd /root && ls
-root.txt
-root@421e0ac051c7:~# cat *
-aba486990e2e849e25c23f6e41e5e303
+root@421e0ac051c7:/#
 ```
 
 Voila nous sommes enfin root ! 🙂

@@ -5,6 +5,8 @@ categories: "Windows"
 tags: ["HackTheBox", "Writeup", "Active Directory", "Reverse Engineering"]
 ---
 
+PivotAPI is a Windows machine from the HackTheBox platform noted Insane released on May 08, 2021. It covers Kerberos missconfiguration, ACL, weak password cracking on a Keepass database, FTP server missconfiguration, as well as a bit of .NET reverse engineering. 😃
+
 ## Port Scanning
 
 Tout d'abord, faisons un scan nmap des ports TCP :

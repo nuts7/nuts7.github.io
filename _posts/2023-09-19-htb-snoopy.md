@@ -5,6 +5,8 @@ categories: "Linux"
 tags: ["HackTheBox", "Writeup", "Web", "Path Traversal", "DNS", "MiTM", "ClamAV"]
 ---
 
+Snoopy is a Linux machine from the HackTheBox platform, Hard released on 06 May 2023. It addresses multiple Web vulnerabilities including an LFI to extract Bind9 credentials, an XXE in the XML parsing of ClamAV's clamscan program. In addition, it covers MiTM SSH with a connection we can trigger with a custom Mattermost command, DNS poisoning to obtain an account takeover vulnerability on Mattermost, and a known vulnerability in the way git handles symbolic links. 😁
+
 ## Port Scanning
 
 Firstly, let's do an nmap scan of the TCP ports:
@@ -68,7 +70,7 @@ DNS zone transfer is the principle of send AXFR request at the DNS server, it's 
 
 On the contact page of the SnoopySec website, we can see a interesting warning: "Attention:  As we migrate DNS records to our new domain please be advised that our mailserver 'mail.snoopy.htb' is currently offline.".
 
-![](/assets/posts/2023-09-19-htb-snoopy/website_mail_snoopy_htb.png)
+![website_mail_snoopy_htb](/assets/posts/2023-09-19-htb-snoopy/website_mail_snoopy_htb.png)
 
 Now we can add all subdomains in our `/etc/hosts` file:
 
@@ -126,7 +128,7 @@ The website compress the asked file in ZIP file and send it into the client.
 
 After multiple tests, we can discover a path traversal:
 
-![](/assets/posts/2023-09-19-htb-snoopy/burp_screen_path_traversal.png)
+![burp_screen_path_traversal](/assets/posts/2023-09-19-htb-snoopy/burp_screen_path_traversal.png)
 
 The backend use a simple filter for the file HTTP parameter input, we can guess that the filter matches with this code line: `$content = preg_replace('/\.\.\//', '', $file);`. The regex in `preg_replace` PHP function is used to replace "../" pattern to empty string.
 
@@ -212,7 +214,7 @@ mail.snoopy.htb.	86400	IN	A	10.10.16.X
 
 Let's remember about the mattermost subdomain, in this website we can send password reset mail:
 
-![](/assets/posts/2023-09-19-htb-snoopy/password_reset_mattermost.png)
+![password_reset_mattermost](/assets/posts/2023-09-19-htb-snoopy/password_reset_mattermost.png)
 
 ```bash
 ❯ sudo /usr/lib/python3.10/smtpd.py -c DebuggingServer 10.10.16.X:25
@@ -258,7 +260,7 @@ b'Content-Type: text/html; charset=UTF-8'
 
 After have delete bad URL encode and smtpd.py format, we get a reset password link: `http://mm.snoopy.htb/reset_password_complete?token=tnir9h37ubdq8p8shfksr1qns1ti13aa7yp54yjxi4xpukrm3yxwjogz8cktz4sz`:
 
-![](/assets/posts/2023-09-19-htb-snoopy/password_reset_success.png)
+![password_reset_success](/assets/posts/2023-09-19-htb-snoopy/password_reset_success.png)
 
 Now we can connect into Mattermost with sbrown user account.
 
@@ -266,11 +268,11 @@ Now we can connect into Mattermost with sbrown user account.
 
 There is a custom command in the tchat:
 
-![](/assets/posts/2023-09-19-htb-snoopy/server_provision_message.png)
+![server_provision_message](/assets/posts/2023-09-19-htb-snoopy/server_provision_message.png)
 
 We can see that we can force a IT staff to connect via SSH in 2222 port in any server that our choice:
 
-![](/assets/posts/2023-09-19-htb-snoopy/server_provision_request.png)
+![server_provision_request](/assets/posts/2023-09-19-htb-snoopy/server_provision_request.png)
 
 We can use [ssh-mitm](https://github.com/ssh-mitm/ssh-mitm) to simulate SSH server in order to recover IT staff's SSH credentials by using MiTM (Man In The Middle) technique:
 

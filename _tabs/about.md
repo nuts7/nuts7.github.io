@@ -4,7 +4,7 @@ icon: fas fa-info-circle
 order: 4
 ---
 
-Hello everyone! I am a 19 year old script kitty and cat lover. 😼  I'm currently student at 2600 school which is specialized in cybersecurity in France. In parallel, I'm passionate about many areas of IT especially Windows and Active Directory.
+Hello everyone! I am a 19 year old script kitty and cat lover. 😼  I'm currently student at [2600 school](https://ecole2600.com/) which is specialized in cybersecurity in France. In parallel, I'm in intership at [Thales](https://www.thalesgroup.com/) where I do pentest and malware development. I'm passionate about many areas of IT especially Windows and Active Directory.
 
 I also really like doing CTFs particularly on [Root Me](https://www.root-me.org/nuts7) and [Hack The Box](https://app.hackthebox.com/profile/428983).
 

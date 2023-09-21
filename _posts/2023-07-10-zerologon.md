@@ -17,17 +17,17 @@ The attack can be summarized in 6 steps:
 
 - **1.** The attacker will attempt to establish a Secure Channel (SChannel) using the Netlogon service by sending a [NetrServerReqChallenge](https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-nrpc/5ad9db9f-7441-4ce5-8c7b-7b771e243d32) request to the DC (Domain Controller) with a Client Challenge of 8 null bytes:
 
-![](/assets/posts/2023-07-10-zerologon/wireshark1.png)
+![wireshark1](/assets/posts/2023-07-10-zerologon/wireshark1.png)
 
 - **2.** The DC returns a `NetrServerReqChallenge` response with a Server Challenge (random value of 8 bytes):
 
-![](/assets/posts/2023-07-10-zerologon/wireshark2.png)
+![wireshark2](/assets/posts/2023-07-10-zerologon/wireshark2.png)
 
 - **3.** The 2 interlocutors generate a Session Key using a Key Derivation Function (KDF) which uses a concatenation of previously exchanged challenges and the hash of the client's account.
 
 - **4.** The client sends a [NetrServerAuthenticate3](https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-nrpc/3a9ed16f-8014-45ae-80af-c0ecb06e2db9) request to the DC, which globally contains:
 
-![](/assets/posts/2023-07-10-zerologon/wireshark3.png)
+![wireshark3](/assets/posts/2023-07-10-zerologon/wireshark3.png)
 
 1. An Account Name, the NetBIOS name of the server's machine account:
 In our case, the DC machine account.
@@ -42,19 +42,19 @@ The value will therefore be `0x212fffff` for Netlogon signing and sealing disabl
 
 To sum up, with a static and null IV, there is a 1 in 256 chance that each block of the ciphertext will be equal to 0 if the plaintext is equal to 0:
 
-![](/assets/posts/2023-07-10-zerologon/aes-cfb8-problem.jpg)
+![aes-cfb8-problem](/assets/posts/2023-07-10-zerologon/aes-cfb8-problem.jpg)
 
 - **5.** The DC in turn calculates the Client Credential and compares it with the one received. The above steps are repeated (around 256 attempts) until the Session Key yields a Client Challenge of 8 null bytes server-side. In this way, the client can impersonate the DC's machine account, setting up a SChannel Netlogon (no problem for brute-force, as machine accounts have alphanumeric passwords longer than 64 characters, unlike user accounts). If this happens, the DC sends the client a `NetrServerAuthenticate3` response with a Server Credential encrypted with the Session Key and Server Challenge:
 
-![](/assets/posts/2023-07-10-zerologon/wireshark4.png)
+![wireshark4](/assets/posts/2023-07-10-zerologon/wireshark4.png)
 
 - **6.** The client can now send a [NetrServerPasswordSet2](https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-nrpc/14b020a8-0bcf-4af5-ab72-cc92bc6b1d81) request to set a null password for the DC machine account:
 
-![](/assets/posts/2023-07-10-zerologon/wireshark5.png)
+![wireshark5](/assets/posts/2023-07-10-zerologon/wireshark5.png)
 
 ## TL ; DR
 
-![](/assets/posts/2023-07-10-zerologon/schema_tldr.png)
+![schema_tldr](/assets/posts/2023-07-10-zerologon/schema_tldr.png)
 
 The DC machine account has [DS-Replication-Get-Changes](https://learn.microsoft.com/en-us/windows/win32/adschema/r-ds-replication-get-changes) and [DS-Replication-Get-Changes-All](https://learn.microsoft.com/en-us/windows/win32/adschema/r-ds-replication-get-changes-all) rights. The attacker can now carry out a DCSync attack, which consists in simulating a replication process by sending an [IDL_DRSGetNCChanges](https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-drsr/b63730ac-614c-431c-9501-28d6aca91894) request to the DRSUAPI to replicate LDAP directory objects in a given naming context (NC), in order to recover Kerberos keys as well as the secrets contained in the `NTDS.dit` database, in particular the NT hash of user krbtgt and Domain Admin (DA).
 
@@ -229,4 +229,4 @@ DWORD RpcRemoteFindFirstPrinterChangeNotificationEx(
 ❯ ntlmrelayx.py -t dcsync://$domain_controller_2 -smb2support
 ```
 
-![](/assets/posts/2023-07-10-zerologon/zerologon_sploit.svg)
+![zerologon_sploit](/assets/posts/2023-07-10-zerologon/zerologon_sploit.svg)

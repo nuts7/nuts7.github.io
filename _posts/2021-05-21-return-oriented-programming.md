@@ -1,5 +1,5 @@
 ---
-title: "ROP & SROP"
+title: "Return-oriented programming (ROP) & Sigreturn-oriented programming (SROP)"
 layout: "post"
 categories: "Linux"
 tags: ["Binary Exploitation", "Exploit Development"]
@@ -51,13 +51,13 @@ char var[256] = "nuts";
 
 Le ROP (Return-oriented programming) est une technique d'exploitation reposant sur la recherche de blocs d'instructions à l'intérieur d'un binaire, ces blocs sont appelés **gadget**. Ces morceaux de code terminent généralement par un ret pour les ROP, un call pour les COP (Call oriented programming) ou un jmp pour les JOP (Jump oriented programming). Nous allons pouvoir chainer ces gadgets (finissant par ret) dans la stack afin d'exécuter une suite d'actions, appelé **ROP Chain**.
 
-![](https://media.giphy.com/media/q6RoNkLlFNjaw/giphy.gif)
+![q6RoNkLlFNjaw](https://media.giphy.com/media/q6RoNkLlFNjaw/giphy.gif)
 
 Le ROP va permettre de bypass principalement des protections telles que NX, l'ASLR et le DEP.
 
 Voici un schéma d'une ROP Chain :
 
-![](https://i.imgur.com/PLNqJLP.png)
+![image4](https://i.imgur.com/PLNqJLP.png)
 
 # Exploitation + Walkthrough ROPME - HackTheBox
 
@@ -176,7 +176,7 @@ Un ret2libc avec une exécution d'un shellcode dans la stack aurait été suffis
 
 > Rappel sur le fonctionnement de l'ASLR :
 
- ![](https://i.imgur.com/ozdoTnu.png)
+ ![image5](https://i.imgur.com/ozdoTnu.png)
 
 Commencons notre ROP Chain par la recherche de gadgets utiles pour notre exploitation avec [Ropper](https://github.com/sashs/Ropper), avec [ROPgadget](https://github.com/JonathanSalwan/ROPgadget) ou avec l'option `/R <instruction>` sur [radare2](https://github.com/radareorg/radare2) :
 
@@ -313,7 +313,7 @@ Dans ce cas nous allons pouvoir afficher l'adresse mémoire d'une fonction de la
 
 _TL;DR_ :
 
-![](https://i.imgur.com/t3l8fEX.png)
+![image6](https://i.imgur.com/t3l8fEX.png)
 
 Pour notre exploitation nous avons besoin de :
 
@@ -417,7 +417,7 @@ p.interactive() # spawn interactive shell
 p.close()
 ```
 
-![](https://media.giphy.com/media/VY20vTr6KCbOBKiGIL/giphy.gif)
+![VY20vTr6KCbOBKiGIL](https://media.giphy.com/media/VY20vTr6KCbOBKiGIL/giphy.gif)
 
 # Bonus - Sigreturn-Oriented Programming
 
@@ -434,7 +434,7 @@ Un signal est une forme d'**IPC** (Inter-process communication) utilisée par le
 
 Concrètement en low level, les signaux sont gérés de cette façon :
 
-![](https://i.imgur.com/peKsKGB.png)
+![image7](https://i.imgur.com/peKsKGB.png)
 
 - **(1)** : Lorsqu’un signal se produit le processus sera temporairement suspendu et entrera en Kernel Land
 - **(2)** : Le kernel enregistre les registre dans la stack frame correspondant pour le processus et saute vers le gestionnaire de signaux (en User Land) précédemment enregistré pour traiter le signal correspondant
@@ -443,7 +443,7 @@ Concrètement en low level, les signaux sont gérés de cette façon :
 
 La structure de la signal frame lorsqu'un signal s'est produit est la suivante (2 : ucontext save) :
 
-![](https://i.imgur.com/3Ba5fSj.png)
+![image1](https://i.imgur.com/3Ba5fSj.png)
 
 La **signal frame** fait **248 bytes**, en ignorant les 8 premiers octets de `rt_sigreturn()` qui pointe vers l'adresse du syscall `sys_rt_sigreturn`.
 L'appel système sigreturn fait un **retour du gestionnaire de signaux** (signal handler) et **nettoie la stack frame**.
@@ -459,7 +459,7 @@ Le SROP (Sigreturn-Oriented Programming) est une technique d'exploitation utilis
 
 Le but est de **provoquer un signal** en exécutant le syscall **sys_rt_sigreturn** avec des gadgets pratiques. Ensuite nous allons devoir **réecrire les registres** stockés dans notre **signal frame** :
 
-![](https://i.imgur.com/NLEbzGH.png)
+![image2](https://i.imgur.com/NLEbzGH.png)
 
 Une fois la signal frame overwrite, le kernel va restauré le context avec nos registres overwrite et donc exectuer notre `sys_execv`.
 
@@ -561,6 +561,6 @@ p.sendline(pld) # send payload
 p.interactive() # spawn interactive shell
 ```
 
-![](https://i.imgur.com/YEGLRh1.png)
+![image3](https://i.imgur.com/YEGLRh1.png)
 
 Nous avons enfin réussi à faire spawn un shell sur 2 challenges basiques d'exploitation de binaire. J'espère que cette article vous a appris de nouvelles choses ! 😃

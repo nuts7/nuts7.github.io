@@ -7,9 +7,7 @@ tags: ["Web", "HackTheBox", "Writeup"]
 
 Bonjour à tous, aujourd'hui je vous présente une machine notée hard qui été vraiment original et j'ai pris du plaisir à la root : **Inception** de **HackTheBox**. 😃
 
-# Recon
-
-## Nmap 10.10.10.67
+## Port Scanning
 
 ```bash
 PORT     STATE SERVICE    VERSION
@@ -25,7 +23,7 @@ La machine contient :
   1. Un serveur Apache
   2. Un proxy Squid
 
-## Enumeration Squid
+## Squid Enumeration
 
 En utilisant [proxychains](https://github.com/haad/proxychains), nous pouvons tenter de passer par ce proxy sans authentification.
 
@@ -63,9 +61,9 @@ PORT     STATE SERVICE
 
 Nous découvrons un serveur SSH accessible seulement en local cependant nous pouvons nous y connecter en passant par le proxy.
 
-## Enumeration Web
+## CVE-2014-2383 - dompdf 0.6.0 Arbitrary File Read
 
-Un WebDIR nous dévoile un directory /dompdf :
+En fuzzant les directories on découvre un directory /dompdf :
 
 ![webdir](https://i.imgur.com/oQlS9iA.png)
 
@@ -73,7 +71,6 @@ Après quelques recherches [dompdf](https://github.com/dompdf/dompdf) est un con
 
 Nous pouvons trouver la version de cette outil dans le fichier /dompdf/VERSION. Nous avons ici **DOMPDF 0.6.0**.
 
-# Foothold + Scripting
 
 ```bash
 ❯ searchsploit dompdf 0.6.0
@@ -164,6 +161,8 @@ except urllib.error.HTTPError:
 	print("Permission Denied for www-data.")
 ```
 
+## Leak WebDAV credentials
+
 Après avoir essayé du **Log Poisoning** ayant **échoué** car nous n'avons pas les droits de lecture sur les logs.
 J'ai effectué de nombreuses recherches et j'ai trouvé des informations dans le fichier de configuration du site par défaut d'Apache à partir de `/etc/apache2/sites-enabled/000-default.conf` :
 
@@ -195,7 +194,7 @@ Possible Hashs:
 [+]  MD5(APR)
 ```
 
-Un petit schéma pour rappeler le format d'un hash :
+Un petit schéma pour rappeler le format du hash :
 
 ![format_hash](https://i.imgur.com/Q5AutjB.png)
 
@@ -213,7 +212,7 @@ Ensuite il suffit d'accéder à notre webshell :
 
 Nous avons enfin un foothold sur la machine ! 😎
 
-# Lateral Movement
+## Lateral Movement
 
 Après une rapide énumération, j'ai trouvé des credentials pour une base de données dans le fichier de configuration du WordPress (`/var/www/html/wordpress_4.8.3/wp-config.php`) :
 
@@ -238,7 +237,7 @@ Essayons de nous connecter sur le serveur SSH via proxychains car il est accessi
 
 Nous avons enfin un accès en tant que utilisateur cobb ! 😄
 
-# Privilege Escalation
+## Privilege Escalation
 
 Nous pouvons énumérer les commandes autorisées pour l'utilisateur courant en utilisant `sudo -l` :
 

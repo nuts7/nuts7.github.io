@@ -7,9 +7,7 @@ tags: ["Binary Exploitation", "Web", "HackTheBox", "Writeup"]
 
 Bonjour à tous, aujourd'hui je vous présente une machine notée hard qui est vraiment intéréssante pour les débutants en **exploitation** de **binaire** et en **Docker container escapes** : **Enterprise** de **HackTheBox**. 😃
 
-# Recon
-
-## Nmap
+### Port Scanning
 
 ```bash
 PORT     STATE SERVICE  VERSION
@@ -39,7 +37,7 @@ Le serveur contient 4 services :
   3. Un serveur Web sur le port 443
   4. Un serveur Web sur le port 8080 avec un CMS Joomla
 
-## WebDIR
+## Web Fuzzing
 
 ### Port 80
 
@@ -53,7 +51,7 @@ Le serveur contient 4 services :
 
 ![webdir_8080](https://i.imgur.com/GiyGZlh.png)
 
-## Enumeration WordPress
+## WordPress Enumeration
 
 Pour automatiser notre énumération, nous allons utiliser [wpscan](https://github.com/wpscanteam/wpscan) :
 
@@ -117,7 +115,7 @@ if (isset($_GET['query'])){
 ?>
 ```
 
-# Exploitation SQLi
+## SQLi in query parameter
 
 Essayons de générer une erreur SQL via le paramètre query :
 
@@ -174,7 +172,7 @@ Nous avons maintenant plusieurs passwords mais aussi users que j'ai trouvé dans
 
 ![joomla_users](https://i.imgur.com/3geNGLd.png)
 
-# Getting shell on WordPress and Joomla container
+## Get shell on WordPress and Joomla containers
 
 Les credentials `william.riker : u*Z14ru0p#ttj83zS6` fonctionnent sur WordPress. De plus, nous pouvons nous connecter avec ces logs `geordi.la.forge : ZD3YxfnSjezg67JZ` sur Joomla.
 
@@ -190,7 +188,7 @@ Lançons 2 listeners et il nous suffit plus qu'a trigger nos reverse shells :
 
 Nous avons un foothold sur 2 containers ! 😃
 
-# Escaping Joomla container
+## Escape Joomla container
 
 IP container WordPress :
 
@@ -252,13 +250,11 @@ Après quelques temps d'énumération, j'ai découvert que les CMS sont exécut�
 
 Nous avons enfin escape le container et nous pouvons afficher le flag user.txt ! 😜
 
-### Upgrade Shell
-
 Voici un cheat sheet pour upgrade un shell netcat en Fully Interactive : [CHEAT SHEET](https://null-byte.wonderhowto.com/how-to/upgrade-dumb-shell-fully-interactive-shell-for-more-flexibility-0197224/)
 
 ![upgrade_sh](https://i.imgur.com/QaMeXjn.png)
 
-# Vertical Privilege Escalation
+## Vertical Privilege Escalation - Buffer overflow (ret2libc)
 
 Après une légère énumération, nous trouvons un binaire SUID pas commum :
 
@@ -321,7 +317,7 @@ Pour cela il faut trouver le bon padding afin de overwrite convenablement nos re
 
 Pour calculer ce padding nous allons voir 3 solutions :
 
-### 1st solution
+### 1st solution - Retrieve padding
 
 ```bash
 gdb-peda$ info functions  # Print binary's functions
@@ -347,7 +343,7 @@ $1 = 212
 
 On récupére la valeur du lea juste avant la fonction stdin et on convertit cette valeur hexadécimal en décimal et on obtient un buffer de 212 chars.
 
-### 2nd solution
+### 2nd solution - Retrieve padding
 
 Lorsque l’on utilise un pattern pour causer un buffer overflow à l’intérieur d’un debugger, nous pouvons identifier exactement quels caractères écrasent l'adresse de retour.
 
@@ -364,7 +360,7 @@ Ensuite je vais run le programme avec cette structure :
 
 Nous trouvons encore une fois 212 octets.
 
-### 3rd solution
+### 3rd solution - Retrieve padding
 
 Posons un breakpoint à la fonction main et lançons le programme :
 
@@ -448,8 +444,6 @@ $1 = 212
 ```
 
 Tout cela convertit en décimal et nous obtenons 212.
-
-## Exploitation + Scripting (pwntools)
 
 Maintenant que nous sommes certain de la zone à écraser nous pouvons effectuer un **ret2libc**.
 
