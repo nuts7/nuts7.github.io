@@ -8,10 +8,11 @@ Hello everyone! I am a 20 year old script kitty and cat lover. 😼  I'm current
 
 I also really like doing CTFs particularly on [Root Me](https://www.root-me.org/nuts7) and [Hack The Box](https://app.hackthebox.com/profile/428983).
 
-In terms of certifications, I am currently [OSCP](https://www.credential.net/686f2429-9ff5-41c9-96f0-ddff36da4d1d), [CARTP](https://www.credential.net/bed78a6e-5045-40f0-b6d0-0ef12bcbf659) and [eJPT](https://verified.elearnsecurity.com/certificates/22f21296-0c5d-4ed2-9756-2afec4342845) certified. I've also completed Hack The Box ProLabs: [RastaLabs](https://www.linkedin.com/in/th%C3%A9o-chiles/overlay/1635518790726/single-media-viewer/?profileId=ACoAADT0-YEBqwHhA1HIRlRpqcjgpH9-PV3P86E), [Zephyr](https://www.linkedin.com/in/th%C3%A9o-chiles/overlay/1635516653561/single-media-viewer/?profileId=ACoAADT0-YEBqwHhA1HIRlRpqcjgpH9-PV3P86E), [Offshore](https://www.linkedin.com/in/th%C3%A9o-chiles/overlay/1635516655299/single-media-viewer/?profileId=ACoAADT0-YEBqwHhA1HIRlRpqcjgpH9-PV3P86E), [Dante](https://www.linkedin.com/in/th%C3%A9o-chiles/details/featured/1635516657103/single-media-viewer/?profileId=ACoAADT0-YEBqwHhA1HIRlRpqcjgpH9-PV3P86E) and [Genesis](https://www.linkedin.com/in/th%C3%A9o-chiles/details/featured/1635516651986/single-media-viewer/?profileId=ACoAADT0-YEBqwHhA1HIRlRpqcjgpH9-PV3P86E).
+In terms of certifications, I am currently [OSEP](https://www.credential.net/7fbfb9e8-2f7a-47da-a445-95e2a58b6291), [OSCP](https://www.credential.net/686f2429-9ff5-41c9-96f0-ddff36da4d1d), [CARTP](https://www.credential.net/bed78a6e-5045-40f0-b6d0-0ef12bcbf659) and [eJPT](https://verified.elearnsecurity.com/certificates/22f21296-0c5d-4ed2-9756-2afec4342845) certified. I've also completed Hack The Box ProLabs: [RastaLabs](https://www.linkedin.com/in/th%C3%A9o-chiles/overlay/1635518790726/single-media-viewer/?profileId=ACoAADT0-YEBqwHhA1HIRlRpqcjgpH9-PV3P86E), [Zephyr](https://www.linkedin.com/in/th%C3%A9o-chiles/overlay/1635516653561/single-media-viewer/?profileId=ACoAADT0-YEBqwHhA1HIRlRpqcjgpH9-PV3P86E), [Offshore](https://www.linkedin.com/in/th%C3%A9o-chiles/overlay/1635516655299/single-media-viewer/?profileId=ACoAADT0-YEBqwHhA1HIRlRpqcjgpH9-PV3P86E), [Dante](https://www.linkedin.com/in/th%C3%A9o-chiles/details/featured/1635516657103/single-media-viewer/?profileId=ACoAADT0-YEBqwHhA1HIRlRpqcjgpH9-PV3P86E) and [Genesis](https://www.linkedin.com/in/th%C3%A9o-chiles/details/featured/1635516651986/single-media-viewer/?profileId=ACoAADT0-YEBqwHhA1HIRlRpqcjgpH9-PV3P86E).
 
 - Certifications:
 
+<a alt="OSEP" href="https://www.credential.net/7fbfb9e8-2f7a-47da-a445-95e2a58b6291"><img alt="OSEP" src="/assets/img/OSEP.png" height="100" width="75"/></a>
 <a alt="OSCP" href="https://www.credential.net/686f2429-9ff5-41c9-96f0-ddff36da4d1d"><img alt="OSCP" src="/assets/img/OSCP.png" height="100" width="75"/></a>
 <a alt="CARTP" href="https://www.credential.net/bed78a6e-5045-40f0-b6d0-0ef12bcbf659"><img alt="CARTP" src="/assets/img/CARTP.png" height="100" width="75"/></a>
 <a alt="eJPT" href="https://verified.elearnsecurity.com/certificates/22f21296-0c5d-4ed2-9756-2afec4342845"><img alt="eJPT" src="/assets/img/eJPT.png" height="100" width="75"/></a>
@@ -28,7 +29,7 @@ In terms of certifications, I am currently [OSCP](https://www.credential.net/686
 
 - Contact:
 
-<a alt="Github" href="https://github.com/nuts7/"><img alt="Github" src="/assets/img/Github.png" height="100" width="75"/></a>
-<a alt="Twitter" href="https://twitter.com/__nuts7"><img alt="Twitter" src="/assets/img/Twitter.png" height="100" width="75"/></a>
-<a alt="Linkedin" href="https://www.linkedin.com/in/th%C3%A9o-chiles"><img alt="Linkedin" src="/assets/img/Linkedin.png" height="100" width="75"/></a>
-<a alt="Discord" href="https://discordapp.com/users/704579147351195659"><img alt="Discord" src="/assets/img/Discord.png" height="100" width="75"/></a>
+<a alt="Github" href="https://github.com/nuts7/"><img alt="Github" src="/assets/img/Github.png" height="50" width="50"/></a>
+<a alt="Twitter" href="https://twitter.com/__nuts7"><img alt="Twitter" src="/assets/img/Twitter.png" height="50" width="50"/></a>
+<a alt="Linkedin" href="https://www.linkedin.com/in/th%C3%A9o-chiles"><img alt="Linkedin" src="/assets/img/Linkedin.png" height="50" width="50"/></a>
+<a alt="Discord" href="https://discordapp.com/users/704579147351195659"><img alt="Discord" src="/assets/img/Discord.png" height="50" width="50"/></a>
