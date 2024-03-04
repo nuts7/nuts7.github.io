@@ -20,6 +20,9 @@ In terms of certifications, I am currently [OSEP](https://www.credential.net/7fb
 <a alt="Zephyr" href="https://www.linkedin.com/in/th%C3%A9o-chiles/overlay/1635516653561/single-media-viewer/?profileId=ACoAADT0-YEBqwHhA1HIRlRpqcjgpH9-PV3P86E"><img alt="Zephyr" src="/assets/img/Zephyr.png" height="100" width="75"/></a>
 <a alt="Offshore" href="https://www.linkedin.com/in/th%C3%A9o-chiles/overlay/1635516655299/single-media-viewer/?profileId=ACoAADT0-YEBqwHhA1HIRlRpqcjgpH9-PV3P86E"><img alt="Offshore" src="/assets/img/Offshore.png" height="100" width="75"/></a>
 <a alt="Dante" href="https://www.linkedin.com/in/th%C3%A9o-chiles/details/featured/1635516657103/single-media-viewer/?profileId=ACoAADT0-YEBqwHhA1HIRlRpqcjgpH9-PV3P86E"><img alt="Dante" src="/assets/img/Dante.png" height="100" width="75"/></a>
+<a alt="Cyclone" href="https://www.linkedin.com/in/th%C3%A9o-chiles/details/featured/1708454644098/single-media-viewer/?profileId=ACoAADT0-YEBqwHhA1HIRlRpqcjgpH9-PV3P86E"><img alt="Cyclone" src="/assets/img/Cyclone.png" height="100" width="75"/></a>
+<a alt="Hailstorm" href="https://www.linkedin.com/in/th%C3%A9o-chiles/details/featured/1707442915150/single-media-viewer/?profileId=ACoAADT0-YEBqwHhA1HIRlRpqcjgpH9-PV3P86E"><img alt="Hailstorm" src="/assets/img/Hailstorm.png" height="100" width="75"/></a>
+<a alt="Blizzard" href="https://www.linkedin.com/in/th%C3%A9o-chiles/details/featured/1708894722590/single-media-viewer/?profileId=ACoAADT0-YEBqwHhA1HIRlRpqcjgpH9-PV3P86E"><img alt="Blizzard" src="/assets/img/Blizzard.png" height="100" width="75"/></a>
 <a alt="Genesis" href="https://www.linkedin.com/in/th%C3%A9o-chiles/details/featured/1635516651986/single-media-viewer/?profileId=ACoAADT0-YEBqwHhA1HIRlRpqcjgpH9-PV3P86E"><img alt="Genesis" src="/assets/img/Genesis.png" height="100" width="75"/></a>
 
 - CTFs platforms:
